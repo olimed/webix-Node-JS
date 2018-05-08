@@ -7,7 +7,7 @@ export default class EditFormView extends JetView {
 		var editForm = {
 			view: "form",
 			id: "users:editForm",
-			elementsConfig:{
+			elementsConfig: {
 				labelWidth: 100
 			},
 			elements: [{
@@ -20,13 +20,13 @@ export default class EditFormView extends JetView {
 							{},
 							{
 								view: "button", label: "Save", type: "form",
-								click: () => {	
-									let win = this.$$("editForm");								
-									let values = win.getValues(); 
-									if (win.validate()) {
-										users.updateItem(values.id, values);										
-										this.hideForm();
+								click: () => {
+									let form = this.getRoot().getBody();
+									let values = form.getValues();
+									if (form.validate()) {
+										users.updateItem(values.id, values);
 									}
+									this.hideForm(form);
 								}
 							},
 							{
@@ -40,8 +40,8 @@ export default class EditFormView extends JetView {
 				]
 			}],
 			rules: {
-				userName: webix.rules.isNotEmpty,
-				name: webix.rules.isNotEmpty,
+				firstName: webix.rules.isNotEmpty,
+				lastName: webix.rules.isNotEmpty,
 				email: webix.rules.isNotEmpty
 			}
 		};
@@ -56,7 +56,7 @@ export default class EditFormView extends JetView {
 			head: { template: "Edit user" },
 			body: editForm
 		};
-		
+
 		return popup;
 	}
 
@@ -66,7 +66,7 @@ export default class EditFormView extends JetView {
 		win.getBody().setValues(data);
 	}
 
-	hideForm(){
+	hideForm() {
 		let win = this.$$("users:editForm");
 		win.hide();
 		win.clear();

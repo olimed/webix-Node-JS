@@ -20,7 +20,7 @@ let book = sequelize.define("book", {
 
 user.hasMany(book);
 
-sequelize.sync({force: true}).then( () => {
+/*sequelize.sync({force: true}).then( () => {
 	user.create({
 		firstName: "Alex", 
 		lastName: "Davidson",
@@ -48,7 +48,7 @@ sequelize.sync({force: true}).then( () => {
 		status: "close",
 		userId: 2
 	});
-});
+});*/
 
 module.exports = {
 	user, book

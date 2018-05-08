@@ -1,5 +1,5 @@
 import "./styles/app.css";
-import {JetApp, plugins} from "webix-jet";
+import {JetApp} from "webix-jet";
 
 webix.ready(() => {
 		
@@ -9,7 +9,6 @@ webix.ready(() => {
 		start:		"/top/users",
 		debug: true
 	});
-	app.use(plugins.Locale);
 	app.render();
 
 	app.attachEvent("app:error:resolve", function(name, error){

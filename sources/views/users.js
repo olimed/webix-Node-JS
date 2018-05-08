@@ -9,14 +9,17 @@ export default class UsersTableView extends JetView {
 			view: "toolbar",
 			id: "datasetA:toolbar",
 			cols: [
-				{ view: "button", id: "toolbar:export", label: "Export to Excel", type: "iconButton", icon: "excel",
+				{
+					view: "button", id: "toolbar:export", label: "Export to Excel", type: "iconButton", icon: "excel",
 					click: () => {
 						webix.toExcel(this.$$("users:datatable"));
 					}
 				},
-				{ view: "button", id: "toolbar:refresh", label: "Refresh", type: "iconButton", icon: "sync", 
+				{
+					view: "button", id: "toolbar:refresh", label: "Refresh", type: "iconButton", icon: "sync",
 					click: () => {
-						this.$$("users:datatable").refresh();
+						this.$$("users:datatable").clearAll();
+						this.$$("users:datatable").load("http://localhost:3000/users");
 					}
 				},
 				{}
@@ -30,8 +33,8 @@ export default class UsersTableView extends JetView {
 			select: true,
 			columns: [
 				{ id: "firstName", header: ["User name", { content: "textFilter" }], sort: "string", fillspace: true },
-				{ id: "lastName", header: ["Title", { content: "textFilter" }], sort: "string" },
-				{ id: "email", header: ["Email", { content: "textFilter" }], sort: "string" }
+				{ id: "lastName", header: ["Last name", { content: "textFilter" }], sort: "string", width: 250 },
+				{ id: "email", header: ["Email", { content: "textFilter" }], sort: "string", width: 250 }
 			],
 			on: {
 				onItemClick: (id) => {
@@ -44,7 +47,7 @@ export default class UsersTableView extends JetView {
 			}
 		};
 
-		
+
 
 		return { rows: [toolbar, usersDatatable] };
 	}
