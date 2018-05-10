@@ -5,7 +5,7 @@ import { books } from "models/books";
 export default class InfoView extends JetView {
 	config() {
 
-		var usersList = {
+		let usersList = {
 			view: "list",
 			width: 250,
 			scrollX: false,
@@ -37,7 +37,7 @@ export default class InfoView extends JetView {
 			}
 		};
 
-		var booksDatatable = {
+		let booksDatatable = {
 			view: "datatable",
 			scrollX: false,
 			select: true,
@@ -65,7 +65,7 @@ export default class InfoView extends JetView {
 			}
 		};
 
-		var bookTemplate = {
+		let bookTemplate = {
 			view: "template",
 			name: "preview",
 			template: (obj) => {

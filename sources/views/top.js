@@ -3,7 +3,7 @@ import { JetView, plugins} from "webix-jet";
 export default class TopView extends JetView {
 	config() {
 
-		var menu = {
+		let menu = {
 			view: "menu", id: "top:menu",
 			width: 180, layout: "y", select: true,
 			template: "<span class='webix_icon fa-#icon#'></span> #value# ",
@@ -15,7 +15,7 @@ export default class TopView extends JetView {
 			]
 		};
 
-		var ui = {
+		let ui = {
 			type: "line",  rows: [
 				{ type: "header", id: "header", template: "#value#", css: "header" },
 				{

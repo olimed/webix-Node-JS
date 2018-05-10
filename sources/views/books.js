@@ -3,7 +3,7 @@ import { JetView } from "webix-jet";
 export default class BookTableView extends JetView {
 	config() {
 
-		var booktable = {
+		let booktable = {
 			view: "datatable",
 			scrollX: false,
 			select: true,
