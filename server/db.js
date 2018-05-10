@@ -17,7 +17,7 @@ let book = sequelize.define("book", {
 	status: Sequelize.STRING,
 	userId: Sequelize.INTEGER
 });
-
+		
 user.hasMany(book);
 
 /*sequelize.sync({force: true}).then( () => {
@@ -26,7 +26,6 @@ user.hasMany(book);
 		lastName: "Davidson",
 		email: "davidson@mail.com"
 	});
-
 	book.create({
 		title: "Gone with the Wind", 
 		author: "Margaret Mitchell",
@@ -34,13 +33,11 @@ user.hasMany(book);
 		status: "open",
 		userId: 1
 	});
-
 	user.create({
 		firstName: "Mark", 
 		lastName: "Colman",
 		email: "MCoolman@mail.com"
 	});
-
 	book.create({
 		title: "Dracula", 
 		author: "Bram Stoker",
