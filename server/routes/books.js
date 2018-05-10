@@ -3,26 +3,26 @@ let db = require("../db");
 module.exports = {
 	getData: (req, res) => {
 
-		var limit = (req.query.count || 20)*1;
-		var offset = (req.query.start || 0)*1;
+		let limit = (req.query.count || 10)*1;
+		let offset = (req.query.start || 0)*1;
 
-		var where = req.query.filter ? { 
-			title: { $like:"%"+req.query.filter.title+"%" }, 
-			author:{ $like:"%"+req.query.filter.author+"%" }, 
-			size:{ $like:"%"+req.query.filter.size+"%" }, 
-			status:{ $like:"%"+req.query.filter.status+"%" } 
+		let where = req.query.filter ? { 
+			title: { $like: `%${req.query.filter.title}%` }, 
+			author:{ $like: `%${req.query.filter.author}%` }, 
+			size:{ $like: `%${req.query.filter.size}%` }, 
+			status:{ $like: `%${req.query.filter.status}%` } 
 		}: {};
 		let order = [];
 		for(let key in req.query.sort)
 			order = [[key, req.query.sort[key]]];
 
-		var count = db.book.findAndCountAll({ where });
-		var page = db.book.findAll({
+		let count = db.book.findAndCountAll({ where });
+		let page = db.book.findAll({
 			where, limit, offset, order
 		});
 
 		Promise.all([count, page]).then(data => res.json({
-			pos:offset, total_count:data[0], data:data[1] 
+			pos:offset, total_count:data[0].count, data:data[1] 
 		}));
 	},
 	updateItem: (req, res) => {

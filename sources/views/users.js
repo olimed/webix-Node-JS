@@ -5,7 +5,7 @@ import editWindow from "views/editForm";
 export default class UsersTableView extends JetView {
 	config() {
 
-		var toolbar = {
+		let toolbar = {
 			view: "toolbar",
 			id: "datasetA:toolbar",
 			cols: [

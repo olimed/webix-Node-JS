@@ -17,7 +17,7 @@ let book = sequelize.define("book", {
 	status: Sequelize.STRING,
 	userId: Sequelize.INTEGER
 });
-
+		
 user.hasMany(book);
 
 /*sequelize.sync({force: true}).then( () => {

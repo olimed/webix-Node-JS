@@ -4,7 +4,7 @@ import { users } from "models/users";
 export default class EditFormView extends JetView {
 	config() {
 
-		var editForm = {
+		let editForm = {
 			view: "form",
 			id: "users:editForm",
 			elementsConfig: {
@@ -46,7 +46,7 @@ export default class EditFormView extends JetView {
 			}
 		};
 
-		var popup = {
+		let popup = {
 			view: "window",
 			id: "editForm:popup",
 			height: 500,

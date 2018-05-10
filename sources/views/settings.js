@@ -89,7 +89,7 @@ export default class SettingsView extends JetView {
 			}
 		};
 
-		var deleteButton = {
+		let deleteButton = {
 			view: "button",
 			label: "Delete",
 			click: () => {
@@ -106,7 +106,7 @@ export default class SettingsView extends JetView {
 			}
 		};
 
-		var grid = {
+		let grid = {
 			view: "toolbar",
 			elements: [
 				{ view: "label", label: "Select" },
@@ -169,7 +169,7 @@ export default class SettingsView extends JetView {
 			}
 		};
 
-		var form = {
+		let form = {
 			view: "form",
 			id: "settings:form",
 			elements: [
