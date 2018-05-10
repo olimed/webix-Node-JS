@@ -17,6 +17,7 @@ app.get("/books", books.getData);
 app.put("/books/:id", books.updateItem);
 app.post("/books", books.upload);
 app.delete("/books/:id", books.delete);
+app.get("/dynamicbooks", books.getDataDynamic);
 
 app.listen(port, () => {
 	console.log(`server is running at localhost:${port}`);

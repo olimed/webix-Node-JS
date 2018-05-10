@@ -16,7 +16,7 @@ export default class BookTableView extends JetView {
 				{id:"size", editor:"text", header: ["Size", {content:"serverFilter"}], sort:"server",fillspace:1},
 				{id:"status", editor:"select", header: ["Status", { content: "selectFilter" }], sort: "server", options: [{id: "open", value: "open"}, {id: "close", value: "close"}], fillspace:1},
 			],
-			url: "http://localhost:3000/books",
+			url: "http://localhost:3000/dynamicbooks",
 			save: "rest->http://localhost:3000/books",
 			on: {
 				onAfterEditStop: () => {

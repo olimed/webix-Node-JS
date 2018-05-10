@@ -7,7 +7,7 @@ export default class UsersTableView extends JetView {
 
 		let toolbar = {
 			view: "toolbar",
-			id: "datasetA:toolbar",
+			id: "users:toolbar",
 			cols: [
 				{
 					view: "button", id: "toolbar:export", label: "Export to Excel", type: "iconButton", icon: "excel",
@@ -26,7 +26,7 @@ export default class UsersTableView extends JetView {
 			]
 		};
 
-		var usersDatatable = {
+		let usersDatatable = {
 			view: "datatable",
 			id: "users:datatable",
 			scrollX: false,

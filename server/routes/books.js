@@ -2,28 +2,7 @@ let db = require("../db");
 
 module.exports = {
 	getData: (req, res) => {
-
-		let limit = (req.query.count || 10)*1;
-		let offset = (req.query.start || 0)*1;
-
-		let where = req.query.filter ? { 
-			title: { $like: `%${req.query.filter.title}%` }, 
-			author:{ $like: `%${req.query.filter.author}%` }, 
-			size:{ $like: `%${req.query.filter.size}%` }, 
-			status:{ $like: `%${req.query.filter.status}%` } 
-		}: {};
-		let order = [];
-		for(let key in req.query.sort)
-			order = [[key, req.query.sort[key]]];
-
-		let count = db.book.findAndCountAll({ where });
-		let page = db.book.findAll({
-			where, limit, offset, order
-		});
-
-		Promise.all([count, page]).then(data => res.json({
-			pos:offset, total_count:data[0].count, data:data[1] 
-		}));
+		db.book.findAll().then(data => res.json(data));	
 	},
 	updateItem: (req, res) => {
 		db.book.findById(req.body.id).then((book) => {
@@ -50,6 +29,30 @@ module.exports = {
 		db.book.findById(req.body.id).then((book) =>
 			book.destroy()
 		).then(() => res.json({}));
+	},
+	getDataDynamic: (req, res) => {
+
+		let limit = (req.query.count || 10)*1;
+		let offset = (req.query.start || 0)*1;
+
+		let where = req.query.filter ? { 
+			title: { $like: `%${req.query.filter.title}%` }, 
+			author:{ $like: `%${req.query.filter.author}%` }, 
+			size:{ $like: `%${req.query.filter.size}%` }, 
+			status:{ $like: `%${req.query.filter.status}%` } 
+		}: {};
+		let order = [];
+		for(let key in req.query.sort)
+			order = [[key, req.query.sort[key]]];
+
+		let count = db.book.findAndCountAll({ where });
+		let page = db.book.findAll({
+			where, limit, offset, order
+		});
+
+		Promise.all([count, page]).then(data => res.json({
+			pos:offset, total_count:data[0].count, data:data[1] 
+		}));
 	}
 
 };

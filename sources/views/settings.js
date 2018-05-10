@@ -165,6 +165,7 @@ export default class SettingsView extends JetView {
 			on: {
 				onAfterFilter: () => {
 					this.filterTable();
+					console.log(1);
 				}
 			}
 		};
