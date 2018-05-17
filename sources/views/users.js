@@ -32,9 +32,9 @@ export default class UsersTableView extends JetView {
 			scrollX: false,
 			select: true,
 			columns: [
-				{ id: "firstName", header: ["User name", { content: "textFilter" }], sort: "string", fillspace: true },
-				{ id: "lastName", header: ["Last name", { content: "textFilter" }], sort: "string", width: 250 },
-				{ id: "email", header: ["Email", { content: "textFilter" }], sort: "string", width: 250 }
+				this.addColumn( "firstName", "User name", true, 0),
+				this.addColumn( "lastName", "Last name", false, 250),
+				this.addColumn( "email", "Email", false, 250)
 			],
 			on: {
 				onItemClick: (id) => {
@@ -47,14 +47,27 @@ export default class UsersTableView extends JetView {
 			}
 		};
 
+		let view = {
+			rows: 
+				[toolbar, usersDatatable]
+		};
 
-
-		return { rows: [toolbar, usersDatatable] };
+		return view;
 	}
 
 	init() {
 		this.$$("users:datatable").sync(users);
 
 		this.editWindow = this.ui(editWindow);
+	}
+
+	addColumn( idValue, headerValue, fillspaceValue, widthValue){
+		let column = { id: idValue, header: [ headerValue, { content: "textFilter" }], sort: "string"};
+		if (fillspaceValue) {
+			column.fillspace = fillspaceValue;
+		} else if (widthValue) {
+			column.width = widthValue;
+		}
+		return column;
 	}
 }

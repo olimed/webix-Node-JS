@@ -5,22 +5,23 @@ export default class BookTableView extends JetView {
 
 		let booktable = {
 			view: "datatable",
+			localId: "books:datatable",
 			scrollX: false,
 			select: true,
 			editable: true,
 			datafetch: 30,
 			loadahead: 30,
 			columns: [
-				{id:"title", editor:"text", header: ["Title" , {content:"serverFilter"}], sort:"server",fillspace:2},
-				{id:"author", editor:"text", header: ["Author", {content:"serverFilter"}], sort:"server",fillspace:2},
-				{id:"size", editor:"text", header: ["Size", {content:"serverFilter"}], sort:"server",fillspace:1},
-				{id:"status", editor:"select", header: ["Status", { content: "selectFilter" }], sort: "server", options: [{id: "open", value: "open"}, {id: "close", value: "close"}], fillspace:1},
+				this.addColumn( "title", "Title", 2),
+				this.addColumn( "author", "Author", 2),
+				this.addColumn( "size", "Size", 1),	
+				this.addColumnSelect( "status", "Status", 1)
 			],
 			url: "http://localhost:3000/dynamicbooks",
 			save: "rest->http://localhost:3000/books",
 			on: {
 				onAfterEditStop: () => {
-					let datatable = this.getRoot().queryView({view:"datatable"});
+					let datatable = this.$$("books:datatable");
 					let values = datatable.getSelectedItem();
 					datatable.updateItem(values.id, values);
 				}
@@ -28,5 +29,12 @@ export default class BookTableView extends JetView {
 		};
 
 		return booktable;
+	}
+
+	addColumn( id, header, fillspace){
+		return {id: id, editor:"text", header: [ header, {content:"serverFilter"}], sort:"server", fillspace: fillspace};
+	}
+	addColumnSelect(id, header, fillspace){
+		return { id: id, editor: "select", header: [ header, { content: "selectFilter" }], sort: "server", options: [{id: "open", value: "open"}, {id: "close", value: "close"}], fillspace: fillspace};
 	}
 }

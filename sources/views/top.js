@@ -8,10 +8,10 @@ export default class TopView extends JetView {
 			width: 180, layout: "y", select: true,
 			template: "<span class='webix_icon fa-#icon#'></span> #value# ",
 			data: [
-				{ value: "Users", id: "users", icon: "users" },
-				{ value: "Books", id: "books", icon: "book" },
-				{ value: "Info", id: "info", icon: "calendar" },
-				{ value: "Settings", id: "settings", icon: "cog" }
+				this.addElement("Users", "users", "users"),
+				this.addElement("Books", "books", "book"),
+				this.addElement("Info", "info", "calendar"),
+				this.addElement("Settings", "settings", "cog")
 			]
 		};
 
@@ -43,5 +43,9 @@ export default class TopView extends JetView {
 	init() {
 		this.use(plugins.Menu, "top:menu");
 		this.$$("header").bind(this.$$("top:menu"));
+	}
+
+	addElement(value, id, icon){
+		return  {value: value, id: id, icon: icon};
 	}
 }

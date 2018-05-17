@@ -12,9 +12,9 @@ export default class EditFormView extends JetView {
 			},
 			elements: [{
 				rows: [
-					{ view: "text", name: "firstName", label: "User Name", labelAlign: "right" },
-					{ view: "text", name: "lastName", label: "Title", labelAlign: "right" },
-					{ view: "text", name: "email", label: "Email", labelAlign: "right" },
+					this.addLabel( "firstName", "User Name"),
+					this.addLabel( "lastName", "Title"),
+					this.addLabel( "email", "Email"),
 					{
 						cols: [
 							{},
@@ -71,5 +71,9 @@ export default class EditFormView extends JetView {
 		win.hide();
 		win.clear();
 		win.clearValidation();
+	}
+
+	addLabel( name, label){
+		return { view: "text", name: name, label: label, labelAlign: "right"};
 	}
 }

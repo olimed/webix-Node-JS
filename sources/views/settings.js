@@ -10,36 +10,22 @@ export default class SettingsView extends JetView {
 				{
 					view: "checkbox", id: "hideUpload", label: "Hide upload", value: 0, labelWidth: 100,
 					click: () => {
-						let uploadButton = this.getRoot().queryView({ view: "uploader", autosend: false });
-						let uploadList = this.getRoot().queryView({ view: "list", type: "uploader" });
-						if (this.$$("hideUpload").getValue()) {
-							uploadButton.hide();
-							uploadList.hide();
-						} else {
-							uploadButton.show();
-							uploadList.show();
-						}
+						let views = [this.$$("settings:upload"), this.$$("upload:list")];
+						this.visibaleViews( this.$$("hideUpload").getValue(), views);
 					}
 				},
 				{
 					view: "checkbox", id: "hideTable", label: "Hide table", value: 0, labelWidth: 100,
 					click: () => {
-						let table = this.getRoot().queryView({ view: "datatable", name: "settings:datatable", });
-						this.$$("hideTable").getValue() ? table.hide() : table.show();
+						let views = [this.$$("settings:datatable")];
+						this.visibaleViews( this.$$("hideTable").getValue(), views);
 					}
 				},
 				{
 					view: "checkbox", id: "hideDelete", label: "Hide delete", value: 0, labelWidth: 100,
 					click: () => {
-						let deleteButton = this.getRoot().queryView({ view: "button", label: "Delete" });
-						let multicombo = this.getRoot().queryView({ view: "multicombo", label: "Delete book" });
-						if (this.$$("hideDelete").getValue()) {
-							deleteButton.hide();
-							multicombo.hide();
-						} else {
-							deleteButton.show();
-							multicombo.show();
-						}
+						let views = [this.$$("settings:buttonDelete"), this.$$("settings:multicombo")];
+						this.visibaleViews( this.$$("hideDelete").getValue(), views);
 					}
 				}
 			]
@@ -50,12 +36,12 @@ export default class SettingsView extends JetView {
 				{
 					view: "uploader", autosend: false, multiple: false,
 					label: "upload book", type: "iconButton", icon: "cloud-upload", css: "style_button",
-					id: "setting:upload",
+					id: "settings:upload",
 					link: "upload:list",
 					upload: "http://localhost:3000/books",
 					on: {
 						onAfterFileAdd: (upload) => {
-							let id = this.getRoot().queryView({ view: "toolbar" }).getChildViews()[1].getValue();
+							let id = this.$$("settings:toolbar").getChildViews()[1].getValue();
 							let file = upload.file;
 							let reader = new FileReader();
 							file.userId = id;
@@ -79,6 +65,7 @@ export default class SettingsView extends JetView {
 		let multicomboForDel = {
 			labelPosition: "top",
 			view: "multicombo",
+			id: "settings:multicombo",
 			label: "Delete book",
 			height: 250,
 			suggest: {
@@ -91,9 +78,10 @@ export default class SettingsView extends JetView {
 
 		let deleteButton = {
 			view: "button",
+			id: "settings:buttonDelete",
 			label: "Delete",
 			click: () => {
-				let multicombo = this.getRoot().queryView({ view: "multicombo", label: "Delete book" });
+				let multicombo = this.$$("settings:multicombo");
 				let values = multicombo.getValue();
 				values = values.split(",");
 				let length = values.length;
@@ -108,6 +96,7 @@ export default class SettingsView extends JetView {
 
 		let grid = {
 			view: "toolbar",
+			id: "settings:toolbar",
 			elements: [
 				{ view: "label", label: "Select" },
 				{
@@ -128,18 +117,18 @@ export default class SettingsView extends JetView {
 					},
 					on: {
 						onChange: () => {
-							let id = this.getRoot().queryView({ view: "toolbar" }).getChildViews()[1].getValue();
+							let id = this.$$("settings:toolbar").getChildViews()[1].getValue();
 							if (id) {
 								let userBooks = [];
-								this.getRoot().queryView({ view: "uploader", autosend: false }).enable();
-								this.getRoot().queryView({ view: "button", label: "Delete" }).enable();
-								this.getRoot().queryView({ view: "datatable" }).filter((obj) => {
+								this.$$("settings:upload").enable();
+								this.$$("settings:buttonDelete").enable();
+								this.$$("settings:datatable").filter((obj) => {
 									if (obj.userId == id) {
 										userBooks.push(obj);
 										return obj;
 									}
 								});
-								let multicombo = this.getRoot().queryView({ view: "multicombo", label: "Delete book" });
+								let multicombo = this.$$("settings:multicombo");
 								multicombo.setValue(userBooks);
 								multicombo.refresh();
 							} else
@@ -152,20 +141,25 @@ export default class SettingsView extends JetView {
 
 		};
 
+		let items = [ 
+			this.addColumn( "title", "Title", "textFilter"),
+			this.addColumn( "status", "Status", "selectFilter"),
+			this.addColumn( "size", "Size", "textFilter")
+		];
+
+		let options = [{id: "open", value: "open"}, {id: "close", value: "close"}];
+		items[0].fillspace = true;
+		items[1].options = options;
+
 		let datatable = {
 			view: "datatable",
-			name: "settings:datatable",
+			id: "settings:datatable",
 			select: true,
 			scrollX: false,
-			columns: [
-				{ id: "title", header: ["Title", { content: "textFilter" }], sort: "string", fillspace: true },
-				{ id: "status", header: ["Status", { content: "selectFilter" }], sort: "string", options: [{id: "open", value: "open"}, {id: "close", value: "close"}] },
-				{ id: "size", header: ["Size", { content: "textFilter" }], sort: "string" }
-			],
+			columns: items,
 			on: {
 				onAfterFilter: () => {
 					this.filterTable();
-					console.log(1);
 				}
 			}
 		};
@@ -187,18 +181,34 @@ export default class SettingsView extends JetView {
 	}
 
 	init() {
-		let table = this.getRoot().queryView({ view: "datatable", name: "settings:datatable" });
+		let table = this.$$("settings:datatable");
 		table.sync(books);
-		this.getRoot().queryView({ view: "uploader", autosend: false }).disable();
-		this.getRoot().queryView({ view: "button", label: "Delete" }).disable();
-		let multicombo = this.getRoot().queryView({ view: "multicombo", label: "Delete book" });
+		this.$$("settings:upload").disable();
+		this.$$("settings:buttonDelete").disable();
+		let multicombo = this.$$("settings:multicombo");
 		multicombo.getPopup().getList().sync(table.data);
 	}
 
 	filterTable() {
-		let id = this.getRoot().queryView({ view: "toolbar" }).getChildViews()[1].getValue();
-		this.getRoot().queryView({ view: "datatable", name: "settings:datatable" }).filter((obj) => {
+		let id = this.$$("settings:toolbar").getChildViews()[1].getValue();
+		this.$$("settings:datatable").filter((obj) => {
 			return obj.userId == id;
 		}, "", true);
+	}
+
+	visibaleViews( value, views){
+		if (value){
+			views.forEach((item) => {
+				item.hide();
+			});
+		} else {
+			views.forEach((item) => {
+				item.show();
+			});
+		}
+	}
+
+	addColumn( id, header, content){
+		return {id: id, header: [ header, {content: content}], sort: "string"};
 	}
 }
