@@ -31,6 +31,10 @@ module.exports = function(env) {
 				{
 					test: /\.(less|css)$/,
 					loader: ExtractTextPlugin.extract("css-loader!less-loader")
+				},
+				{
+					test: /\.hbs$/,
+					loader: "handlebars-loader"
 				}
 			]
 		},

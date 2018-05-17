@@ -1,12 +1,15 @@
 import { JetView } from "webix-jet";
 import { users } from "models/users";
 import { books } from "models/books";
+import  templateForList from "views/layouts/listInfo.hbs";
+import  templateForBook from "views/layouts/templateInfo.hbs";
 
 export default class InfoView extends JetView {
 	config() {
 
 		let usersList = {
 			view: "list",
+			localId: "info:list",
 			width: 250,
 			scrollX: false,
 			select: true,
@@ -14,23 +17,19 @@ export default class InfoView extends JetView {
 				height: 60
 			},
 			template: (obj) => {
-				return `
-					<div id='wrapper'>
-						<div id='avatar'> 
-							<span class='webix_icon fa-user-circle icon-avatar'></span>
-						</div>
-						<div> 
-							${obj.firstName} ${obj.lastName}
-							<div>${obj.email}</div>
-						</div>
-					</div>
-				`;
+				let objtemp = {
+					firstName: obj.firstName,
+					lastName: obj.lastName,
+					email: obj.email
+				};
+	
+				return templateForList(objtemp);
 			},
 			on: {
 				onAfterSelect: () => {
-					this.getRoot().queryView({ view: "template", name: "preview" }).hide();
-					this.getRoot().queryView({ view: "datatable" }).filter((obj) => {
-						let item = this.getRoot().queryView({ view: "list" }).getSelectedItem();
+					this.$$("info:template").hide();
+					this.$$("info:datatable").filter((obj) => {
+						let item = this.$$("info:list").getSelectedItem();
 						return obj.userId == item.id;
 					});
 				}
@@ -39,62 +38,76 @@ export default class InfoView extends JetView {
 
 		let booksDatatable = {
 			view: "datatable",
+			localId: "info:datatable",
 			scrollX: false,
 			select: true,
 			editable: true,
 			columns: [
-				{ id: "title", editor: "text", header: "Title", fillspace: true },
-				{ id: "author", editor: "text", header: "Author", width: 300 },
-				{ id: "size", editor: "text", header: "Size (kb)", width: 100 }
+				this.addColumn( "title", "Title", true, 0),
+				this.addColumn( "author", "Author", 0, 300),
+				this.addColumn( "size", "Size (kb)", 0, 100)
 			],
 
 			on: {
 				onAfterEditStop: () => {
-					let datatable = this.getRoot().queryView({ view: "datatable" });
+					let datatable = this.$$("info:datatable");
 					let values = datatable.getSelectedItem();
 					datatable.updateItem(values.id, values);
-					this.getRoot().queryView({ view: "template", name: "preview" }).setValues(values);
+					this.$$("info:template").setValues(values);
 				},
 				onAfterSelect: () => {
-					let values = this.getRoot().queryView({ view: "datatable" }).getSelectedItem();
-					let template = this.getRoot().queryView({ view: "template", name: "preview" });
+					let values = this.$$("info:datatable").getSelectedItem();
+					let template = this.$$("info:template");
 					template.setValues(values);
-					template.show();
-					//this.show(`users?id=${id}`);					
+					template.show();					
 				}
 			}
 		};
 
 		let bookTemplate = {
 			view: "template",
-			name: "preview",
+			id: "info:template",
 			template: (obj) => {
-				return `
-					<div id='info-header'>
-						<div id = 'title'>
-						<h1 style='padding-left:18px; min-height: 40px;'>${obj.title}</h1>
-						<h2 style='padding-left:18px; min-height: 40px;'>${obj.author}</h2>
-						<br>
-						</div>
-					</div>				
-				`;
+				let template = {
+					title: obj.title,
+					author: obj.author
+				};
+				return templateForBook(template);
 			}
 
 		};
 
-		return { cols: [usersList, { rows: [booksDatatable, bookTemplate] }] };
+		let view = {
+			cols: [
+				usersList, 
+				{ rows: [booksDatatable, bookTemplate] }
+			]
+		};
+
+		return view;
 	}
 
-	init(view) {
+	init() {
 		books.waitData.then(() => {
-			view.queryView({ view: "datatable" }).sync(books);
+			this.$$("info:datatable").sync(books);
 		});
 		users.waitData.then(() => {
-			let list = view.queryView({ view: "list" });
+			let list = this.$$("info:list");
 			list.sync(users);
 			list.select(users.getFirstId());
 		});
 
-		view.queryView({ view: "template", name: "preview" }).hide();
+		this.$$("info:template").hide();
+	}
+
+	addColumn( id, header, fillspace, width){
+		let column = { id: id, editor: "text", header: header};
+		if (fillspace){
+			column.fillspace = fillspace;
+		}
+		if (width){
+			column.width = width;
+		}
+		return column;
 	}
 }
